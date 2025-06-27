@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="midia/favicon.ico" type="image/x-icon">
+
+    <title>Pesquisa: Efeitos da Temperatura no Arroz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom scroll behavior for smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Custom styles for the active navigation item */
+        .nav-item.active {
+            background-color: #f0f9ff;
+            border-left: 4px solid #0369a1;
+        }
+
+        /* Animation for chart transitions */
+        .chart-container {
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        @media (max-width: 768px) {
+
+            /* Mobile-specific styles */
+            .mobile-nav {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background-color: white;
+                box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+                z-index: 1000;
+            }
+        }
+
+        .chart-year-label {
+            font-weight: 600;
+            color: #374151;
+            /* text-gray-800 */
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 font-sans text-gray-800">
+    <!-- Header Section -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-sky-800">
+                <span class="text-sky-600">Rice</span>Temp Research
+            </h1>
+            <button id="mobile-menu-button" class="md:hidden text-gray-600 hover:text-sky-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+        </div>
+        <!-- Mobile menu (hidden by default) -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white py-2 px-4 shadow-md">
+            <ul class="space-y-2">
+                <li><a href="#inicio" class="block py-2 text-gray-700 hover:text-sky-600">Início</a></li>
+                <li><a href="#metodologia" class="block py-2 text-gray-700 hover:text-sky-600">Metodologia</a></li>
+                <li><a href="#resultados" class="block py-2 text-gray-700 hover:text-sky-600">Resultados</a></li>
+                <li><a href="#conclusao" class="block py-2 text-gray-700 hover:text-sky-600">Conclusão</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <div class="container mx-auto px-4 py-8 flex flex-col md:flex-row">
+        <!-- Main Content (left side) -->
+        <main class="w-full md:w-3/4 lg:w-4/5 pr-0 md:pr-8">
+            <!-- Início Section -->
+            <section id="inicio" class="py-12 border-b border-gray-200">
+                <h2 class="text-3xl font-semibold text-sky-800 mb-6">Impacto da Temperatura no Cultivo de Arroz</h2>
+                <div class="prose max-w-none text-gray-700">
+                    <p class="mb-4">Esta pesquisa quantifica os efeitos das variações térmicas nas 9 fases fenológicas
+                        do arroz(Oryza sativa L.), desde a germinação até a maturação. Utilizamos parâmetros agronômicos
+                        validados para cada fase, analisando a adequação térmica diária em três categorias:
+                        <li>Dentro da faixa ótima </li>
+                        <li>Aceitável (fora do ótimo)</li>
+                        <li>Fora da faixa aceitável</li>
+                    </p>
+                    <p class="mb-4">Com as alterações climáticas tornando-se cada vez mais evidentes, compreender como
+                        diferentes temperaturas afetam o crescimento, desenvolvimento e rendimento do arroz é crucial
+                        para a segurança alimentar mundial.</p>
+                    <p>Nossos dados abrangem medições históricas (200), o cenário atual (2024) e projeções futuras
+                        (aumento 1 grau °C), proporcionando uma visão abrangente dessa importante relação.</p>
+                </div>
+            </section>
+
+            <!-- Metodologia Section -->
+            <section id="metodologia" class="py-12 border-b border-gray-200">
+                <h2 class="text-3xl font-semibold text-sky-800 mb-6">Metodologia da Pesquisa</h2>
+                <div class="prose max-w-none text-gray-700">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Coleta de Dados</h3>
+                    <p class="mb-4">Os dados foram obtidos do Instituto Nacional de Meteorologia (INMET). Priorizamos
+                        estações meteorológicas localizadas em zonas de cultivo de arroz, focando na cidade com a maior
+                        produção recente ou seja Santa Vitória do Palmar, no Rio Grande do Sul,
+                        para garantir a relevância dos dados. Esses registros foram combinados com
+                        dados históricos, estabelecendo uma linha de base para a análise.
+                    </p>
+
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Pipeline de Análise Térmica</h3>
+                    <p class="mb-4">Nosso pipeline opera em 4 etapas sequenciais:</p>
+                    <ul class="list-disc pl-6 mb-4 space-y-2">
+                        <li>Coleta e Armazenamento de Dados
+                        </li>
+                        <li>Aplicação de transformação térmica</li>
+                        <li>Classificação Fenológica
+                        <li>Aplicação de funções de categorização por fase</li>
+                        </li>
+                        <li>Geração de Relatórios</li>
+                    </ul>
+
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Validaçôes</h3>
+                    <p class="mb-4">A validação dos modelos será realizada através de validação cruzada, análises
+                        de sensibilidade, testes de capacidade preditiva e avaliação por especialistas, visando
+                        assegurar a precisão e a robustez.</p>
+
+                </div>
+            </section>
+
+            <section>
+                <h2 class="text-3xl font-semibold text-sky-800 mb-6"> O que analisamos</h2>
+                O que analisamos
+                Para cada fase do crescimento do arroz, verificamos quantos dias no ano têm:
+
+                <li>✅ Temperatura otíma (a planta se desenvolve melhor)</li>
+
+                <li>⚠️ Temperatura aceitável (a planta cresce, mas não ideal)</li>
+
+                <li>❌ Temperatura prejudicial (risco para a plantação)</li>
+            </section>
+
+            <!-- Resultados Section -->
+            <section id="resultados" class="py-12 border-b border-gray-200">
+                <h2 class="text-3xl font-semibold text-sky-800 mb-6">Resultados da Pesquisa</h2>
+
+                <!-- Chart Filter Controls -->
+                <div class="flex justify-between items-center mb-8 flex-wrap gap-2">
+                    <h3 class="text-xl font-semibold text-gray-800">Filtrar por ano:</h3>
+                    <div class="inline-flex rounded-md shadow-sm" role="group">
+                        <button type="button" data-year="2024"
+                            class="chart-filter-btn px-4 py-2 text-sm font-medium border-t border-b border-gray-200 bg-white text-gray-700 hover:bg-gray-100 hover:text-sky-700 focus:z-10">
+                            2024 (Atual)
+                        </button>
+                        <button type="button" data-year="aumento 1 grau °C"
+                            class="chart-filter-btn px-4 py-2 text-sm font-medium rounded-r-md border border-gray-200 bg-white text-gray-700 hover:bg-gray-100 hover:text-sky-700 focus:z-10">
+                            aumento 1 grau °C (Projeção)
+                        </button>
+                        <button type="button" data-year="aumento de 4,5 °C (Projeção)"
+                            class="chart-filter-btn px-4 py-2 text-sm font-medium rounded-l-lg border border-gray-200 bg-white text-gray-700 hover:bg-gray-100 hover:text-sky-700 focus:z-10">
+                            aumento de 4,5 °C (Projeção)
+                        </button>
+                    </div>
+                    <button id="show-all-charts"
+                        class="px-4 py-2 text-sm font-medium rounded-md border border-gray-200 bg-white text-gray-700 hover:bg-gray-100 hover:text-sky-700">
+                        Mostrar Todos
+                    </button>
+                </div>
+
+                <!-- Charts Grid -->
+                <div class="grid grid-cols-1 gap-8">
+                    <!-- Chart 1 Germinação-->
+                    <div class="chart-container border bg-white rounded-lg shadow-sm overflow-hidden"
+                        data-years="aumento de 4,5 °C (Projeção) 2024 aumento 1 grau °C">
+                        <div class="p-4 pb-0">
+                            <h4 class="text-lg font-semibold text-gray-800 mb-2">Germinação</h4>
+                            <!-- Se precisar comentar algo em baixo do titulo
+                            <p class="text-gray-600 mb-4"></p> -->
+                        </div>
+                        <div class="chart-image-container p-4">
+                            <div class="chart-image-wrapper" data-year="aumento de 4,5 °C (Projeção)">
+                                <!-- Inserido via JS: <p class="chart-year-label">aumento de 4,5 °C (Projeção)</p> -->
+                                <img src="midia/germinacao_previsao_4.5.png"
+                                    alt="Gráfico de aumento de 4,5 °C (Projeção)" class="w-full rounded"
+                                    data-year="aumento de 4,5 °C (Projeção)">
+                            </div>
+                            <div class="chart-image-wrapper hidden" data-year="2024">
+                                <img src="midia/germinacao_2024.png" alt="Gráfico de 2024" class="w-full rounded"
+                                    data-year="2024">
+                            </div>
+                            <div class="chart-image-wrapper hidden" data-year="aumento 1 grau °C">
+                                <img src="midia/germinacao_previsao.png" alt="Gráfico de aumento 1 grau °C"
+                                    class="w-full rounded" data-year="aumento 1 grau °C">
+                            </div>
+                        </div>
+                        <!--  Se precisar comentar no rodape
+                        <div class="px-4 pb-4 text-sm text-gray-500">
+                            <p>Obs: A linha vermelha indica a temperatura ótima para máxima produtividade.</p>
+                        </div> -->
+                    </div>
+
+                    <!-- Chart 2 Emergência e estabelecimento da
+                                plântula-->
+                    <div class="chart-container border bg-white rounded-lg shadow-sm overflow-hidden"
+                        data-years="aumento de 4,5 °C (Projeção) 2024 aumento 1 grau °C">
+                        <div class="p-4 pb-0">
+                            <h4 class="text-lg font-semibold text-gray-800 mb-2">Emergência e estabelecimento da
+                                plântula</h4>
+                            <!-- Se precisar comentar algo em baixo do titulo
+                            <p class="text-gray-600 mb-4"></p> -->
+                        </div>
+                        <div class="chart-image-container p-4">
+                            <div class="chart-image-wrapper" data-year="aumento de 4,5 °C (Projeção)">
+                                <!-- Inserido via JS: <p class="chart-year-label">aumento de 4,5 °C (Projeção)</p> -->
+                                <img src="midia/emergencia_previsao_4.5.png"
+                                    alt="Gráfico de aumento de 4,5 °C (Projeção)" class="w-full rounded"
+                                    data-year="aumento de 4,5 °C (Projeção)">
+                            </div>
+                            <div class="chart-image-wrapper hidden" data-year="2024">
+                                <img src="midia/emergencia_2024.png" alt="Gráfico de 2024" class="w-full rounded"
+                                    data-year="2024">
+                            </div>
+                            <div class="chart-image-wrapper hidden" data-year="aumento 1 grau °C">
+                                <img src="midia/emergencia_previsao.png" alt="Gráfico de aumento 1 grau °C"
+                                    class="w-full rounded" data-year="aumento 1 grau °C">
+                            </div>
+                        </div>
+                        <!--  Se precisar comentar no rodape
+                        <div class="px-4 pb-4 text-sm text-gray-500">
+                            <p>Obs: A linha vermelha indica a temperatura ótima para máxima produtividade.</p>
+                        </div> -->
+                    </div>
+
+                    <!-- Chart 3 Desenvolvimento da raiz-->
+                    <div class="chart-container border bg-white rounded-lg shadow-sm overflow-hidden"
+                        data-years="aumento de 4,5 °C (Projeção) 2024 aumento 1 grau °C">
+                        <div class="p-4 pb-0">
+                            <h4 class="text-lg font-semibold text-gray-800 mb-2">Desenvolvimento da raiz</h4>
+                            <!-- Se precisar comentar algo em baixo do titulo
+                            <p class="text-gray-600 mb-4"></p> -->
+                        </div>
+                        <div class="chart-image-container p-4">
+                            <div class="chart-image-wrapper" data-year="aumento de 4,5 °C (Projeção)">
+                                <!-- Inserido via JS: <p class="chart-year-label">aumento de 4,5 °C (Projeção)</p> -->
+                                <img src="midia/desenvolvmento_previsao_4.5.png"
+                                    alt="Gráfico de aumento de 4,5 °C (Projeção)" class="w-full rounded"
+                                    data-year="aumento de 4,5 °C (Projeção)">
+                            </div>
+                            <div class="chart-image-wrapper hidden" data-year="2024">
+                                <img src="midia/desenvolvmento_2024.png" alt="Gráfico de 2024" class="w-full rounded"
+                                    data-year="2024">
+                            </div>
+                            <div class="chart-image-wrapper hidden" data-year="aumento 1 grau °C">
+                                <img src="midia/desenvolvmento_previsao.png" alt="Gráfico de aumento 1 grau °C"
+                                    class="w-full rounded" data-year="aumento 1 grau °C">
+                            </div>
+                        </div>
+                        <!--  Se precisar comentar no rodape
+                        <div class="px-4 pb-4 text-sm text-gray-500">
+                            <p>Obs: A linha vermelha indica a temperatura ótima para máxima produtividade.</p>
+                        </div> -->
+                    </div>
+
+                    <!-- Chart Alongamento da folha4 -->
+                    <div class="chart-container border bg-white rounded-lg shadow-sm overflow-hidden"
+                        data-years="aumento de 4,5 °C (Projeção) 2024 aumento 1 grau °C">
+                        <div class="p-4 pb-0">
+                            <h4 class="text-lg font-semibold text-gray-800 mb-2">Alongamento da folha</h4>
+                            <!-- Se precisar comentar algo em baixo do titulo
+                            <p class="text-gray-600 mb-4"></p> -->
+                        </div>
+                        <div class="chart-image-container p-4">
+                            <div class="chart-image-wrapper" data-year="aumento de 4,5 °C (Projeção)">
+                                <!-- Inserido via JS: <p class="chart-year-label">aumento de 4,5 °C (Projeção)</p> -->
+                                <img src="midia/alongamento_previsao_4.5.png"
+                                    alt="Gráfico de aumento de 4,5 °C (Projeção)" class="w-full rounded"
+                                    data-year="aumento de 4,5 °C (Projeção)">
+                            </div>
+                            <div class="chart-image-wrapper hidden" data-year="2024">
+                                <img src="midia/alongamento_2024.png" alt="Gráfico de 2024" class="w-full rounded"
+                                    data-year="2024">
+                            </div>
+                            <div class="chart-image-wrapper hidden" data-year="aumento 1 grau °C">
+                                <img src="midia/alongamento_previsao.png" alt="Gráfico de aumento 1 grau °C"
+                                    class="w-full rounded" data-year="aumento 1 grau °C">
+                            </div>
+                        </div>
+                        <!--  Se precisar comentar no rodape
+                        <div class="px-4 pb-4 text-sm text-gray-500">
+                            <p>Obs: A linha vermelha indica a temperatura ótima para máxima produtividade.</p>
+                        </div> -->
+                    </div>
+
+                    <!-- Chart 5 Perfilhamento-->
+                    <div class="chart-container border bg-white rounded-lg shadow-sm overflow-hidden"
+                        data-years="aumento de 4,5 °C (Projeção) 2024 aumento 1 grau °C">
+                        <div class="p-4 pb-0">
+                            <h4 class="text-lg font-semibold text-gray-800 mb-2">Perfilhamento</h4>
+                            <!-- Se precisar comentar algo em baixo do titulo
+                            <p class="text-gray-600 mb-4"></p> -->
+                        </div>
+                        <div class="chart-image-container p-4">
+                            <div class="chart-image-wrapper" data-year="aumento de 4,5 °C (Projeção)">
+                                <!-- Inserido via JS: <p class="chart-year-label">aumento de 4,5 °C (Projeção)</p> -->
+                                <img src="midia/perfilamento_previsao_4.5.png"
+                                    alt="Gráfico de aumento de 4,5 °C (Projeção)" class="w-full rounded"
+                                    data-year="aumento de 4,5 °C (Projeção)">
+                            </div>
+                            <div class="chart-image-wrapper hidden" data-year="2024">
+                                <img src="midia/perfilamento_2024.png" alt="Gráfico de 2024" class="w-full rounded"
+                                    data-year="2024">
+                            </div>
+                            <div class="chart-image-wrapper hidden" data-year="aumento 1 grau °C">
+                                <img src="midia/perfilamento_precisao.png" alt="Gráfico de aumento 1 grau °C"
+                                    class="w-full rounded" data-year="aumento 1 grau °C">
+                            </div>
+                        </div>
+                        <!--  Se precisar comentar no rodape
+                        <div class="px-4 pb-4 text-sm text-gray-500">
+                            <p>Obs: A linha vermelha indica a temperatura ótima para máxima produtividade.</p>
+                        </div> -->
+                    </div>
+
+                    <!-- Chart 6 Diferenciação do primórdio floral-->
+                    <div class="chart-container border bg-white rounded-lg shadow-sm overflow-hidden"
+                        data-years="aumento de 4,5 °C (Projeção) 2024 aumento 1 grau °C">
+                        <div class="p-4 pb-0">
+                            <h4 class="text-lg font-semibold text-gray-800 mb-2">Diferenciação do primórdio floral</h4>
+                            <!-- Se precisar comentar algo em baixo do titulo
+                            <p class="text-gray-600 mb-4"></p> -->
+                        </div>
+                        <div class="chart-image-container p-4">
+                            <div class="chart-image-wrapper" data-year="aumento de 4,5 °C (Projeção)">
+                                <!-- Inserido via JS: <p class="chart-year-label">aumento de 4,5 °C (Projeção)</p> -->
+                                <img src="midia/diferenciacao_previsao_4.5.png"
+                                    alt="Gráfico de aumento de 4,5 °C (Projeção)" class="w-full rounded"
+                                    data-year="aumento de 4,5 °C (Projeção)">
+                            </div>
+                            <div class="chart-image-wrapper hidden" data-year="2024">
+                                <img src="midia/diferenciacao_2024.png" alt="Gráfico de 2024" class="w-full rounded"
+                                    data-year="2024">
+                            </div>
+                            <div class="chart-image-wrapper hidden" data-year="aumento 1 grau °C">
+                                <img src="midia/diferenciacao_previsao.png" alt="Gráfico de aumento 1 grau °C"
+                                    class="w-full rounded" data-year="aumento 1 grau °C">
+                            </div>
+                        </div>
+                        <!--  Se precisar comentar no rodape
+                        <div class="px-4 pb-4 text-sm text-gray-500">
+                            <p>Obs: A linha vermelha indica a temperatura ótima para máxima produtividade.</p>
+                        </div> -->
+                    </div>
+
+                    <!-- Chart 7 Emissão da panícula-->
+                    <div class="chart-container border bg-white rounded-lg shadow-sm overflow-hidden"
+                        data-years="aumento de 4,5 °C (Projeção) 2024 aumento 1 grau °C">
+                        <div class="p-4 pb-0">
+                            <h4 class="text-lg font-semibold text-gray-800 mb-2">Emissão da panícula</h4>
+                            <!-- Se precisar comentar algo em baixo do titulo
+                            <p class="text-gray-600 mb-4"></p> -->
+                        </div>
+                        <div class="chart-image-container p-4">
+                            <div class="chart-image-wrapper" data-year="aumento de 4,5 °C (Projeção)">
+                                <!-- Inserido via JS: <p class="chart-year-label">aumento de 4,5 °C (Projeção)</p> -->
+                                <img src="midia/emicao_previsao_4.5.png" alt="Gráfico de aumento de 4,5 °C (Projeção)"
+                                    class="w-full rounded" data-year="aumento de 4,5 °C (Projeção)">
+                            </div>
+                            <div class="chart-image-wrapper hidden" data-year="2024">
+                                <img src="midia/emicao_2024.png" alt="Gráfico de 2024" class="w-full rounded"
+                                    data-year="2024">
+                            </div>
+                            <div class="chart-image-wrapper hidden" data-year="aumento 1 grau °C">
+                                <img src="midia/emicao_previsao.png" alt="Gráfico de aumento 1 grau °C"
+                                    class="w-full rounded" data-year="aumento 1 grau °C">
+                            </div>
+                        </div>
+                        <!--  Se precisar comentar no rodape
+                        <div class="px-4 pb-4 text-sm text-gray-500">
+                            <p>Obs: A linha vermelha indica a temperatura ótima para máxima produtividade.</p>
+                        </div> -->
+                    </div>
+
+                    <!-- Chart 8 Antese-->
+                    <div class="chart-container border bg-white rounded-lg shadow-sm overflow-hidden"
+                        data-years="aumento de 4,5 °C (Projeção) 2024 aumento 1 grau °C">
+                        <div class="p-4 pb-0">
+                            <h4 class="text-lg font-semibold text-gray-800 mb-2">Antese</h4>
+                            <!-- Se precisar comentar algo em baixo do titulo
+                            <p class="text-gray-600 mb-4"></p> -->
+                        </div>
+                        <div class="chart-image-container p-4">
+                            <div class="chart-image-wrapper" data-year="aumento de 4,5 °C (Projeção)">
+                                <!-- Inserido via JS: <p class="chart-year-label">aumento de 4,5 °C (Projeção)</p> -->
+                                <img src="midia/antese_previsao_4.5.png" alt="Gráfico de aumento de 4,5 °C (Projeção)"
+                                    class="w-full rounded" data-year="aumento de 4,5 °C (Projeção)">
+                            </div>
+                            <div class="chart-image-wrapper hidden" data-year="2024">
+                                <img src="midia/antese_2024.png" alt="Gráfico de 2024" class="w-full rounded"
+                                    data-year="2024">
+                            </div>
+                            <div class="chart-image-wrapper hidden" data-year="aumento 1 grau °C">
+                                <img src="midia/antese_previsao.png" alt="Gráfico de aumento 1 grau °C"
+                                    class="w-full rounded" data-year="aumento 1 grau °C">
+                            </div>
+                        </div>
+                        <!--  Se precisar comentar no rodape
+                        <div class="px-4 pb-4 text-sm text-gray-500">
+                            <p>Obs: A linha vermelha indica a temperatura ótima para máxima produtividade.</p>
+                        </div> -->
+                    </div>
+
+                    <!-- Chart 9 Maturação-->
+                    <div class="chart-container border bg-white rounded-lg shadow-sm overflow-hidden"
+                        data-years="aumento de 4,5 °C (Projeção) 2024 aumento 1 grau °C">
+                        <div class="p-4 pb-0">
+                            <h4 class="text-lg font-semibold text-gray-800 mb-2">Maturação</h4>
+                            <!-- Se precisar comentar algo em baixo do titulo
+                            <p class="text-gray-600 mb-4"></p> -->
+                        </div>
+                        <div class="chart-image-container p-4">
+                            <div class="chart-image-wrapper" data-year="aumento de 4,5 °C (Projeção)">
+                                <!-- Inserido via JS: <p class="chart-year-label">aumento de 4,5 °C (Projeção)</p> -->
+                                <img src="midia/maturacao_previsao_4.5.png"
+                                    alt="Gráfico de aumento de 4,5 °C (Projeção)" class="w-full rounded"
+                                    data-year="aumento de 4,5 °C (Projeção)">
+                            </div>
+                            <div class="chart-image-wrapper hidden" data-year="2024">
+                                <img src="midia/maturacao_2024.png" alt="Gráfico de 2024" class="w-full rounded"
+                                    data-year="2024">
+                            </div>
+                            <div class="chart-image-wrapper hidden" data-year="aumento 1 grau °C">
+                                <img src="midia/maturacao_prevsao.png" alt="Gráfico de aumento 1 grau °C"
+                                    class="w-full rounded" data-year="aumento 1 grau °C">
+                            </div>
+                        </div>
+                        <!--  Se precisar comentar no rodape
+                        <div class="px-4 pb-4 text-sm text-gray-500">
+                            <p>Obs: A linha vermelha indica a temperatura ótima para máxima produtividade.</p>
+                        </div> -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Conclusão Section -->
+            <section id="conclusao" class="py-12">
+                <h2 class="text-3xl font-semibold text-sky-800 mb-6">Conclusão e Próximos Passos</h2>
+                <div class="prose max-w-none text-gray-700">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Principais Descobertas</h3>
+                    <p class="mb-4">Nosso estudo revelou impactos alarmantes do aumento térmico nas fases críticas do
+                        arroz:</p>
+                    <ul class="list-disc pl-6 mb-6 space-y-2">
+                        <li><strong>Maturação (+1°C):</strong> Dias ideais caem 26% (148 → 126 dias)</li>
+                        <li><strong>Germinação:</strong> Dias fora da faixa aceitável aumentam 35%</li>
+                        <li><strong>Antese (floração):</strong> 258 dias fora do ideal — fase mais crítica</li>
+                        <li><strong>Maturação (+4.5°C):</strong> 83% do ano (304 dias) inadequados ao desenvolvimento
+                        </li>
+                        <li><strong>Perfilhamento:</strong> 68% dos dias (249) fora da faixa aceitável</li>
+                        <li><strong>Alongamento foliar:</strong> Praticamente nenhum dia ótimo restante</li>
+                        <li><strong>Resiliência limitada:</strong> Variedades modernas só mitigam efeitos nas fases
+                            iniciais, mas falham em fases reprodutivas</li>
+                    </ul>
+
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Recomendações Prioritárias</h3>
+                    <p class="mb-4">Com base nos resultados, recomendamos:</p>
+                    <ul class="list-disc pl-6 mb-6 space-y-2">
+                        <li>Desenvolvimento de variedades termorresistentes, focando em genes que protejam floração e
+                            enchimento de grãos</li>
+                        <li>Parcerias com instituições como IRRI (Filipinas) e EMBRAPA (Brasil)</li>
+                        <li>Reengenharia do calendário agrícola: antecipar o plantio em 30 dias para evitar picos
+                            térmicos na floração</li>
+                        <li>Zoneamento por altitude: deslocar cultivos para regiões mais altas como a Serra Gaúcha</li>
+                        <li>Tecnologias emergenciais de resfriamento: aspersão noturna e telas termorrefletoras</li>
+                        <li>Políticas de adaptação: seguro agrícola vinculado a índices térmicos e subsídios para
+                            cultivos indoor em regiões críticas</li>
+                    </ul>
+
+                    <blockquote class="border-l-4 border-sky-800 pl-4 italic text-gray-600">
+                        “Estudos do IRRI indicam que a produtividade do arroz pode cair cerca de 20% para cada aumento
+                        de 1°C na temperatura média, especialmente quando o calor ocorre durante a floração.”<br>
+                        — International Rice Research Institute (IRRI)
+                    </blockquote>
+
+                    <h3 class="text-xl font-semibold text-gray-800 mt-8 mb-3">Próximos Passos</h3>
+                    <p class="mb-2">Nosso foco principal será o desenvolvimento de um algoritmo baseado em aprendizado
+                        de máquina, capaz de analisar com maior precisão:</p>
+                    <ul class="list-disc pl-6 mb-6 space-y-2">
+                        <li>Padrões de temperatura diários e sazonais</li>
+                        <li>Registros históricos de produtividade</li>
+                        <li>Dados de fisiologia vegetal específicos do arroz</li>
+                        <li>Projeções de mudanças climáticas do IPCC</li>
+                    </ul>
+                    <p class="mb-4">Além disso, expandiremos a pesquisa para incluir fatores cruciais como umidade do
+                        solo e concentração de CO<sub>2</sub>, buscando previsões cada vez mais robustas para o futuro
+                        do cultivo de arroz.</p>
+                </div>
+            </section>
+        </main>
+
+        <!-- Side Navigation (right side - desktop) -->
+        <aside class="hidden md:block w-1/4 lg:w-1/5">
+            <div class="sticky top-20 py-4">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4 pl-4">Navegação</h3>
+                <nav>
+                    <ul class="space-y-1">
+                        <li>
+                            <a href="#inicio"
+                                class="nav-item block px-4 py-2 text-gray-700 hover:bg-sky-50 hover:text-sky-700 rounded-l-lg transition">Início</a>
+                        </li>
+                        <li>
+                            <a href="#metodologia"
+                                class="nav-item block px-4 py-2 text-gray-700 hover:bg-sky-50 hover:text-sky-700 rounded-l-lg transition">Metodologia</a>
+                        </li>
+                        <li>
+                            <a href="#resultados"
+                                class="nav-item block px-4 py-2 text-gray-700 hover:bg-sky-50 hover:text-sky-700 rounded-l-lg transition">Resultados</a>
+                        </li>
+                        <li>
+                            <a href="#conclusao"
+                                class="nav-item block px-4 py-2 text-gray-700 hover:bg-sky-50 hover:text-sky-700 rounded-l-lg transition">Conclusão</a>
+                        </li>
+                    </ul>
+                </nav>
+                <div class="mt-8 px-4">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Contato</h3>
+                    <p class="text-gray-600 text-sm mb-4">Para mais informações sobre esta pesquisa:</p>
+                    <a href="mailto:pesquisa@arroz.com"
+                        class="text-sky-600 hover:text-sky-800 text-sm">pesquisa@arroz.com</a>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Mobile Navigation (fixed bottom) -->
+    <nav class="mobile-nav md:hidden block">
+        <ul class="flex justify-around py-3">
+            <li>
+                <a href="#inicio" class="flex flex-col items-center text-xs text-gray-700 hover:text-sky-600">
+                    <svg xmlns="http://www.w3.org/aumento de 4,5 °C (Projeção)/svg" class="h-5 w-5" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    </svg>
+                    <span>Início</span>
+                </a>
+            </li>
+            <li>
+                <a href="#metodologia" class="flex flex-col items-center text-xs text-gray-700 hover:text-sky-600">
+                    <svg xmlns="http://www.w3.org/aumento de 4,5 °C (Projeção)/svg" class="h-5 w-5" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+                    </svg>
+                    <span>Método</span>
+                </a>
+            </li>
+            <li>
+                <a href="#resultados" class="flex flex-col items-center text-xs text-gray-700 hover:text-sky-600">
+                    <svg xmlns="http://www.w3.org/aumento de 4,5 °C (Projeção)/svg" class="h-5 w-5" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                    <span>Resultados</span>
+                </a>
+            </li>
+            <li>
+                <a href="#conclusao" class="flex flex-col items-center text-xs text-gray-700 hover:text-sky-600">
+                    <svg xmlns="http://www.w3.org/aumento de 4,5 °C (Projeção)/svg" class="h-5 w-5" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                    <span>Conclusão</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Footer -->
+    <footer class="bg-sky-900 text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between">
+                <div class="mb-6 md:mb-0">
+                    <h3 class="text-xl font-semibold mb-2">RiceTemp Research</h3>
+                    <p class="text-sm text-sky-200">Compreendendo os efeitos da temperatura na agricultura do arroz.</p>
+                </div>
+                <div class="grid grid-cols-2 gap-8">
+                    <div>
+                        <h4 class="text-sm font-semibold mb-2 uppercase tracking-wider">Links</h4>
+                        <ul class="space-y-2">
+                            <li><a href="#inicio" class="text-sm text-sky-200 hover:text-white">Início</a></li>
+                            <li><a href="#metodologia" class="text-sm text-sky-200 hover:text-white">Metodologia</a>
+                            </li>
+                            <li><a href="#resultados" class="text-sm text-sky-200 hover:text-white">Resultados</a></li>
+                        </ul>
+                    </div>
+                    <!-- <div>
+                        <h4 class="text-sm font-semibold mb-2 uppercase tracking-wider">Legal</h4>
+                        <ul class="space-y-2">
+                            <li><a href="#" class="text-sm text-sky-200 hover:text-white">Privacidade</a></li>
+                            <li><a href="#" class="text-sm text-sky-200 hover:text-white">Termos</a></li>
+                        </ul>
+                    </div> -->
+                </div>
+            </div>
+            <div class="border-t border-sky-800 mt-8 pt-6 text-center text-sm text-sky-200">
+                <p>© 2024 RiceTemp Research. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Mobile menu toggle
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', function () {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+
+            // Highlight active navigation item based on scroll position
+            const sections = ['inicio', 'metodologia', 'resultados', 'conclusao'];
+            const navItems = document.querySelectorAll('.nav-item');
+
+            function updateActiveNavItem() {
+                let currentSection = '';
+
+                sections.forEach(section => {
+                    const element = document.getElementById(section);
+                    if (element) {
+                        const rect = element.getBoundingClientRect();
+                        if (rect.top <= 100 && rect.bottom >= 100) {
+                            currentSection = section;
+                        }
+                    }
+                });
+
+                navItems.forEach(item => {
+                    item.classList.remove('active');
+                    if (item.getAttribute('href') === `#${currentSection}`) {
+                        item.classList.add('active');
+                    }
+                });
+            }
+
+            window.addEventListener('scroll', updateActiveNavItem);
+            updateActiveNavItem(); // Run once on page load
+
+            // Chart filtering functionality
+            const chartFilterButtons = document.querySelectorAll('.chart-filter-btn');
+            const showAllChartsButton = document.getElementById('show-all-charts');
+
+            function filterChartsByYear(year) {
+                document.querySelectorAll('.chart-image-wrapper').forEach(wrapper => {
+                    const imgYear = wrapper.getAttribute('data-year');
+                    const label = wrapper.querySelector('.chart-year-label');
+
+                    if (imgYear === year) {
+                        wrapper.classList.remove('hidden');
+                    } else {
+                        wrapper.classList.add('hidden');
+                    }
+
+                    // Esconde os rótulos do ano em todos os casos ao filtrar
+                    if (label) {
+                        label.remove(); // Ou use label.classList.add('hidden') se preferir manter no DOM
+                    }
+                });
+
+                // Atualiza os botões de filtro
+                chartFilterButtons.forEach(btn => {
+                    if (btn.getAttribute('data-year') === year) {
+                        btn.classList.add('bg-sky-100', 'text-sky-700');
+                        btn.classList.remove('bg-white', 'text-gray-700');
+                    } else {
+                        btn.classList.remove('bg-sky-100', 'text-sky-700');
+                        btn.classList.add('bg-white', 'text-gray-700');
+                    }
+                });
+            }
+
+            function showAllCharts() {
+                document.querySelectorAll('.chart-image-wrapper').forEach(wrapper => {
+                    const year = wrapper.getAttribute('data-year');
+
+                    // Mostrar a imagem
+                    wrapper.classList.remove('hidden');
+
+                    // Verifica se já existe um label, senão cria
+                    let label = wrapper.querySelector('.chart-year-label');
+                    if (!label) {
+                        label = document.createElement('p');
+                        label.className = 'chart-year-label';
+                        label.textContent = year;
+                        wrapper.insertBefore(label, wrapper.querySelector('img'));
+                    } else {
+                        label.classList.remove('hidden');
+                    }
+                });
+
+                // Reset filter buttons
+                chartFilterButtons.forEach(btn => {
+                    btn.classList.remove('bg-sky-100', 'text-sky-700');
+                    btn.classList.add('bg-white', 'text-gray-700');
+                });
+            }
+
+            // Event listeners for chart filtering
+            chartFilterButtons.forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const year = this.getAttribute('data-year');
+                    filterChartsByYear(year);
+                });
+            });
+
+            if (showAllChartsButton) {
+                showAllChartsButton.addEventListener('click', showAllCharts);
+            }
+
+            // Initialize charts to show all by default
+            showAllCharts();
+        });
+    </script>
+</body>
+
+</html>
